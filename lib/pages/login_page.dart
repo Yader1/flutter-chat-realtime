@@ -17,14 +17,18 @@ class LoginPage extends StatelessWidget {
           physics: const BouncingScrollPhysics(),
           child: SizedBox(
             height: MediaQuery.of(context).size.height * 0.9,
-            child: const Column(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Logo(),
-                _Form(),
-                Labels(),
+                Logo(titulo: "Messenger"),
+                const _Form(),
+                const Labels(
+                  textPregunta: "No tienes cuenta?",
+                  textButton:  "Crear una ahora!",
+                  ruta: 'register',
+                ),
             
-                Text(
+                const Text(
                   "Terminos y condiciones de uso", 
                   style: TextStyle(color: Colors.black45, fontSize: 12, fontWeight: FontWeight.w200),
                 ),
