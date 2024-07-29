@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/button_general.dart';
 import '../widgets/custom_input.dart';
 import '../widgets/labels.dart';
 import '../widgets/logo.dart';
@@ -9,21 +10,30 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Color(0xffF2F2F2),
+    return Scaffold(
+      backgroundColor: const Color(0xffF2F2F2),
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Logo(),
-            _Form(),
-            Labels(),
-
-            Text(
-              "Terminos y condiciones de uso", 
-              style: TextStyle(color: Colors.black45, fontSize: 12, fontWeight: FontWeight.w200),
-            ),
-          ],
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 50),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Logo(),
+              const _Form(),
+              const Labels(),
+              ButtonGeneral(
+                titulo: "Ingresar", 
+                onPressed: (){
+                    
+                },
+              ),
+          
+              const Text(
+                "Terminos y condiciones de uso", 
+                style: TextStyle(color: Colors.black45, fontSize: 12, fontWeight: FontWeight.w200),
+              ),
+            ],
+          ),
         ),
       )
     );
@@ -45,7 +55,6 @@ class __FormState extends State<_Form> {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 40),
-      padding: const EdgeInsets.symmetric(horizontal: 50),
       child: Column(
         children: [
           CustomInput(
@@ -60,11 +69,6 @@ class __FormState extends State<_Form> {
             textEditingController: passCtrl,
             isPassword: true,
           ),
-
-          //ElevatedButton(
-            //onPressed: (){}, 
-            //child: const Text("Login"),
-          //)
         ],
       ),
     );
