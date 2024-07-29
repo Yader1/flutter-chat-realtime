@@ -13,26 +13,23 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xffF2F2F2),
       body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 50),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Logo(),
-              const _Form(),
-              const Labels(),
-              ButtonGeneral(
-                titulo: "Ingresar", 
-                onPressed: (){
-                    
-                },
-              ),
-          
-              const Text(
-                "Terminos y condiciones de uso", 
-                style: TextStyle(color: Colors.black45, fontSize: 12, fontWeight: FontWeight.w200),
-              ),
-            ],
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.9,
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Logo(),
+                _Form(),
+                Labels(),
+            
+                Text(
+                  "Terminos y condiciones de uso", 
+                  style: TextStyle(color: Colors.black45, fontSize: 12, fontWeight: FontWeight.w200),
+                ),
+              ],
+            ),
           ),
         ),
       )
@@ -55,6 +52,7 @@ class __FormState extends State<_Form> {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 40),
+      padding: const EdgeInsets.symmetric(horizontal: 50),
       child: Column(
         children: [
           CustomInput(
@@ -68,6 +66,13 @@ class __FormState extends State<_Form> {
             placeholder: 'Contrasenia',
             textEditingController: passCtrl,
             isPassword: true,
+          ),
+
+          ButtonGeneral(
+            titulo: "Ingresar", 
+            onPressed: (){
+                    
+            },
           ),
         ],
       ),
