@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../models/usuario.dart';
 
@@ -10,6 +11,8 @@ class UsuariosPage extends StatefulWidget {
 }
 
 class _UsuariosPageState extends State<UsuariosPage> {
+  final RefreshController _refreshController = RefreshController(initialRefresh: false);
+
   final usuarios = [
     Usuario(online: true, email: 'yader@test.com', nombre: 'Yader', uuid: '1'),
     Usuario(online: false, email: 'xib@test.com', nombre: 'Xib Ach', uuid: '2'),
@@ -37,25 +40,50 @@ class _UsuariosPageState extends State<UsuariosPage> {
           )
         ],
       ),
-      body: ListView.separated(
-        physics: const BouncingScrollPhysics(),
-        itemBuilder: (_, i) => ListTile(
-          title: Text(usuarios[i].nombre),
-          leading: CircleAvatar(
-            child: Text(usuarios[i].nombre.substring(0,2)),
-          ),
-          trailing: Container(
-            width: 10,
-            height: 10,
-            decoration: BoxDecoration(
-              color: usuarios[i].online ? Colors.green.shade300 : Colors.red,
-              borderRadius: BorderRadius.circular(100)
-            ),
-          ),
-        ), 
-        separatorBuilder: (_, i) => const Divider(), 
-        itemCount: usuarios.length
+      body: SmartRefresher(
+        controller: _refreshController,
+        onRefresh: _cargarUsuarios,
+        enablePullDown: true,
+        header: WaterDropHeader(
+          complete: Icon(Icons.check, color: Colors.blue.shade400),
+          waterDropColor: Colors.blue.shade400,
+        ),
+        child: _listViewUsuarios()
       )
     );
+  }
+
+  ListView _listViewUsuarios() {
+    return ListView.separated(
+      physics: const BouncingScrollPhysics(),
+      itemBuilder: (_, i) => _usuarioListTile(usuarios[i]), 
+      separatorBuilder: (_, i) => const Divider(), 
+      itemCount: usuarios.length
+    );
+  }
+
+  ListTile _usuarioListTile(Usuario usuario) {
+    return ListTile(
+      title: Text(usuario.nombre),
+      subtitle: Text(usuario.email),
+      leading: CircleAvatar(
+        backgroundColor: Colors.blue.shade200,
+        child: Text(usuario.nombre.substring(0,2)),
+      ),
+      trailing: Container(
+        width: 10,
+        height: 10,
+        decoration: BoxDecoration(
+          color: usuario.online ? Colors.green.shade300 : Colors.red,
+          borderRadius: BorderRadius.circular(100)
+        ),
+      ),
+    );
+  }
+
+  _cargarUsuarios() async {
+    await Future.delayed(const Duration(milliseconds: 1000));
+    // if failed,use refreshFailed()
+    _refreshController.refreshCompleted();
   }
 }
