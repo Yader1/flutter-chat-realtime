@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../services/auth_service.dart';
 
 import '../widgets/button_general.dart';
 import '../widgets/custom_input.dart';
@@ -75,7 +78,8 @@ class __FormState extends State<_Form> {
           ButtonGeneral(
             titulo: "Ingresar", 
             onPressed: (){
-                    
+              var authService = Provider.of<AuthService>(context, listen: false);
+              authService.login(emailCtrl.text, passCtrl.text);
             },
           ),
         ],
