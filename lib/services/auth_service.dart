@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../global/environment.dart';
+import '../models/login_response.dart';
+import '../models/usuario.dart';
 
 class AuthService with ChangeNotifier{
-
+  Usuario? usuario;
   Future<void> login(String email, String password) async {
     var data = {
       'email': email,
@@ -25,7 +27,9 @@ class AuthService with ChangeNotifier{
     );
 
     log(resp.body);
+    if(resp.statusCode == 200){
+      final loginResponse = loginResponseFromJson(resp.body);
+      usuario = loginResponse.usuario;
+    }
   }
-
-
 }
