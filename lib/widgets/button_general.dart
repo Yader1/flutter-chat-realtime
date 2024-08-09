@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 
 class ButtonGeneral extends StatelessWidget {
   final String titulo;
-  Function() onPressed;
+  final Function()? onPressed;
   
-  ButtonGeneral({
+  const ButtonGeneral({
     super.key,
     required this.titulo, 
-    required this.onPressed,
+    this.onPressed,
   });
 
   @override
@@ -20,7 +20,7 @@ class ButtonGeneral extends StatelessWidget {
         shape: const StadiumBorder()
       ),
       onPressed: onPressed,
-      child: Container(
+      child: SizedBox(
         width: double.infinity,
         height: 55,
         child: Center(
