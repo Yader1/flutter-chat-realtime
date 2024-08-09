@@ -19,7 +19,7 @@ class AuthService with ChangeNotifier{
     notifyListeners();
   }
 
-  Future<void> login(String email, String password) async {
+  Future<bool> login(String email, String password) async {
     autenticando = true;
 
     var data = {
@@ -38,11 +38,16 @@ class AuthService with ChangeNotifier{
     );
 
     log(resp.body);
+    autenticando = false;
+
     if(resp.statusCode == 200){
       final loginResponse = loginResponseFromJson(resp.body);
       usuario = loginResponse.usuario;
-    }
 
-    autenticando = false;
+      return true;
+    } else {
+
+      return false;
+    }
   }
 }

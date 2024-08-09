@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_realtime/helpers/mostrar_alerta.dart';
 import 'package:provider/provider.dart';
 
 import '../services/auth_service.dart';
@@ -79,9 +80,15 @@ class __FormState extends State<_Form> {
 
           ButtonGeneral(
             titulo: "Ingresar", 
-            onPressed: authService.autenticando ? null : (){
+            onPressed: authService.autenticando ? null : () async {
               FocusScope.of(context).unfocus();
-              authService.login(emailCtrl.text.trim(), passCtrl.text.trim());
+              final loginOk = await authService.login(emailCtrl.text.trim(), passCtrl.text.trim());
+              
+              if(loginOk){
+
+              } else {
+                mostrarAlerta(context, 'Login incorrecto', 'Revisar sus credenciales.');
+              }
             },
           ),
         ],
