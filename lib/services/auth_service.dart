@@ -51,7 +51,6 @@ class AuthService with ChangeNotifier{
       }
     );
 
-    log(resp.body);
     autenticando = false;
 
     if(resp.statusCode == 200){
@@ -86,7 +85,6 @@ class AuthService with ChangeNotifier{
       }
     );
 
-    log(resp.body);
     autenticando = false;
 
     if(resp.statusCode == 200){
@@ -114,8 +112,6 @@ class AuthService with ChangeNotifier{
         'x-token': token ?? ''
       }
     );
-
-    log(resp.body);
 
     if(resp.statusCode == 200){
       final loginResponse = loginResponseFromJson(resp.body);
