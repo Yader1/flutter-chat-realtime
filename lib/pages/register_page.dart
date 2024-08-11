@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../helpers/mostrar_alerta.dart';
+import '../services/auth_service.dart';
 import '../widgets/button_general.dart';
 import '../widgets/custom_input.dart';
 import '../widgets/labels.dart';
@@ -55,6 +58,8 @@ class __FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+    var authService = Provider.of<AuthService>(context);
+
     return Container(
       margin: const EdgeInsets.only(top: 40),
       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -79,9 +84,16 @@ class __FormState extends State<_Form> {
           ),
 
           ButtonGeneral(
-            titulo: "Ingresar", 
-            onPressed: (){
-                    
+            titulo: "Crear cuenta", 
+            onPressed: authService.autenticando ? null : () async {
+              FocusScope.of(context).unfocus();
+              final registerOk = await authService.register(nombreCtrl.text.trim(), emailCtrl.text.trim(), passCtrl.text.trim());
+              
+              if(registerOk == true){
+                Navigator.pushReplacementNamed(context, 'usuarios');
+              } else {
+                mostrarAlerta(context, 'Registro incorrecto', registerOk);
+              }
             },
           ),
         ],
