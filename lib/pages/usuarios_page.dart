@@ -5,6 +5,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../models/usuario.dart';
 
 import '../services/auth_service.dart';
+import '../services/socket_service.dart';
 
 class UsuariosPage extends StatefulWidget {
   const UsuariosPage({super.key});
@@ -25,6 +26,8 @@ class _UsuariosPageState extends State<UsuariosPage> {
   @override
   Widget build(BuildContext context) {
     var authService = Provider.of<AuthService>(context);
+    var socketService = Provider.of<SocketService>(context);
+    
     var usuario = authService.usuario;
     
     return Scaffold(
@@ -34,6 +37,7 @@ class _UsuariosPageState extends State<UsuariosPage> {
         backgroundColor: Colors.white,
         leading: IconButton(
           onPressed: (){
+            socketService.disconnect();
             Navigator.pushReplacementNamed(context, 'login');
             AuthService.deleteToken();
           },

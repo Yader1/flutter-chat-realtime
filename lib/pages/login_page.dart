@@ -3,6 +3,7 @@ import 'package:flutter_chat_realtime/helpers/mostrar_alerta.dart';
 import 'package:provider/provider.dart';
 
 import '../services/auth_service.dart';
+import '../services/socket_service.dart';
 
 import '../widgets/button_general.dart';
 import '../widgets/custom_input.dart';
@@ -21,18 +22,18 @@ class LoginPage extends StatelessWidget {
           physics: const BouncingScrollPhysics(),
           child: SizedBox(
             height: MediaQuery.of(context).size.height * 0.9,
-            child: Column(
+            child: const Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Logo(titulo: "Messenger"),
-                const _Form(),
-                const Labels(
+                _Form(),
+                Labels(
                   textPregunta: "No tienes cuenta?",
                   textButton:  "Crear una ahora!",
                   ruta: 'register',
                 ),
             
-                const Text(
+                Text(
                   "Terminos y condiciones de uso", 
                   style: TextStyle(color: Colors.black45, fontSize: 12, fontWeight: FontWeight.w200),
                 ),
@@ -59,6 +60,7 @@ class __FormState extends State<_Form> {
   @override
   Widget build(BuildContext context) {
     var authService = Provider.of<AuthService>(context);
+    var socketService = Provider.of<SocketService>(context);
 
     return Container(
       margin: const EdgeInsets.only(top: 40),
@@ -85,6 +87,7 @@ class __FormState extends State<_Form> {
               final loginOk = await authService.login(emailCtrl.text.trim(), passCtrl.text.trim());
               
               if(loginOk){
+                socketService.connect();
                 Navigator.pushReplacementNamed(context, 'usuarios');
               } else {
                 mostrarAlerta(context, 'Login incorrecto', 'Revisar sus credenciales.');

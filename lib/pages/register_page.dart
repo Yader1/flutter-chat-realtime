@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../helpers/mostrar_alerta.dart';
 import '../services/auth_service.dart';
+import '../services/socket_service.dart';
 import '../widgets/button_general.dart';
 import '../widgets/custom_input.dart';
 import '../widgets/labels.dart';
@@ -20,18 +21,18 @@ class RegisterPage extends StatelessWidget {
           physics: const BouncingScrollPhysics(),
           child: SizedBox(
             height: MediaQuery.of(context).size.height * 0.9,
-            child: Column(
+            child: const Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Logo(titulo: "Registro"),
-                const _Form(),
-                const Labels(
+                _Form(),
+                Labels(
                   textPregunta: "Ya tienes una cuenta?",
                   textButton: "Ingresa ahora!",
                   ruta: 'login',
                 ),
             
-                const Text(
+                Text(
                   "Terminos y condiciones de uso", 
                   style: TextStyle(color: Colors.black45, fontSize: 12, fontWeight: FontWeight.w200),
                 ),
@@ -59,6 +60,7 @@ class __FormState extends State<_Form> {
   @override
   Widget build(BuildContext context) {
     var authService = Provider.of<AuthService>(context);
+    var socketService = Provider.of<SocketService>(context);
 
     return Container(
       margin: const EdgeInsets.only(top: 40),
@@ -90,6 +92,7 @@ class __FormState extends State<_Form> {
               final registerOk = await authService.register(nombreCtrl.text.trim(), emailCtrl.text.trim(), passCtrl.text.trim());
               
               if(registerOk == true){
+                socketService.connect();
                 Navigator.pushReplacementNamed(context, 'usuarios');
               } else {
                 mostrarAlerta(context, 'Registro incorrecto', registerOk);
