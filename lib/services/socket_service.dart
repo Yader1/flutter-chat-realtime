@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../services/auth_service.dart';
 import '../global/environment.dart';
 
 enum ServerStatus{
@@ -18,11 +19,16 @@ class SocketService with ChangeNotifier{
 
   Function get emit => _socket!.emit;
 
-  void connect(){
+  void connect() async {
+    final token = await AuthService.getToken();
+
     _socket = IO.io(Environment.socketUrl, {
       'transports': ['websocket'],
       'autoConnect': true,
-      'forceNew': true
+      'forceNew': true,
+      'extraHeaders': {
+        'x-token': token
+      }
     });
 
     _socket!.onConnect((_) {
