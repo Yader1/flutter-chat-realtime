@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -30,10 +31,27 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin{
 
   @override
   void initState() {
+    super.initState();
+
     authService = Provider.of<AuthService>(context, listen: false);
     chatService = Provider.of<ChatService>(context, listen: false);
     socketService = Provider.of<SocketService>(context, listen: false);
-    super.initState();
+
+    socketService!.socket.on('mensaje-personal', _escucharMensaje);
+  }
+
+  void _escucharMensaje(dynamic payload){
+    ChatMessage message = ChatMessage(
+      uid: payload['de'], 
+      texto: payload['mensaje'], 
+      animationController: AnimationController(vsync: this, duration: const Duration(milliseconds: 300))
+    );
+
+    setState(() {
+      _messages.insert(0, message);
+    });
+
+    message.animationController.forward();
   }
 
   @override
@@ -158,6 +176,8 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin{
     for(ChatMessage message in _messages){
       message.animationController.dispose();
     }
+
+    socketService!.socket.off('mensaje-personal');
     super.dispose();
   }
 }
