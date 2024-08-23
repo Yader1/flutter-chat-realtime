@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../services/auth_service.dart';
+import '../services/socket_service.dart';
 import '../services/chat_service.dart';
 import '../widgets/chat_message.dart';
 
@@ -22,10 +24,21 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin{
 
   final List<ChatMessage> _messages = [];
 
+  ChatService? chatService;
+  SocketService? socketService;
+  AuthService? authService;
+
+  @override
+  void initState() {
+    authService = Provider.of<AuthService>(context, listen: false);
+    chatService = Provider.of<ChatService>(context, listen: false);
+    socketService = Provider.of<SocketService>(context, listen: false);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final chatService = Provider.of<ChatService>(context);
-    final usuarioPara = chatService.usuarioPara;
+    final usuarioPara = chatService!.usuarioPara;
     
     return Scaffold(
       appBar: AppBar(
@@ -131,6 +144,12 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin{
 
     setState(() {
       _estaEscribiendo = false;
+    });
+
+    socketService!.emit('mensaje-personal', {
+      'de': authService!.usuario!.uid,
+      'para': chatService!.usuarioPara!.uid,
+      'mensaje': texto
     });
   }
 
