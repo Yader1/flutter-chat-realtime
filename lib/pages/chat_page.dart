@@ -1,10 +1,10 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/mensajes_response.dart';
 import '../services/auth_service.dart';
 import '../services/socket_service.dart';
 import '../services/chat_service.dart';
@@ -38,6 +38,8 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin{
     socketService = Provider.of<SocketService>(context, listen: false);
 
     socketService!.socket.on('mensaje-personal', _escucharMensaje);
+
+    _cargarHistorial(chatService!.usuarioPara!.uid);
   }
 
   void _escucharMensaje(dynamic payload){
@@ -152,7 +154,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin{
     _textController.clear();
 
     final newMessage = ChatMessage(
-      uid: '123', 
+      uid: authService!.usuario!.uid, 
       texto: texto, 
       animationController: AnimationController(vsync: this, duration: const Duration(milliseconds: 200))
     );
@@ -179,5 +181,19 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin{
 
     socketService!.socket.off('mensaje-personal');
     super.dispose();
+  }
+  
+  void _cargarHistorial(String uid) async {
+    List<Mensaje> chat = await chatService!.getChat(uid);
+
+    final history = chat.map((m) => ChatMessage(
+      texto: m.mensaje,
+      uid: m.de,
+      animationController: AnimationController(vsync: this, duration: const Duration(milliseconds: 0))..forward(),
+    ));
+
+    setState(() {
+      _messages.insertAll(0, history);
+    });
   }
 }
